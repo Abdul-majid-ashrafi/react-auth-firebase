@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { AuthenticationComponent } from "../../components";
-import { signin, signup, authWithGoogle,authWithFacebook } from '../../store/actions';
+import { signin, signup, authWithGoogle, authWithFacebook } from '../../store/actions';
+
 
 class AuthenticationContainer extends Component {
     constructor(props) {
@@ -34,10 +35,15 @@ class AuthenticationContainer extends Component {
     onAuthWithGoogle = () => {
         this.props.authWithGoogle();
     }
-    
+
     onAuthWithFacebook = () => {
         this.props.authWithFacebook();
     }
+
+    onAuthWithLinkedin = () => {
+        // hit server api
+        window.location = "http://localhost:5000/api/login";
+    };
 
     onChangeHandler = (event) => {
         const { name, value } = event.currentTarget;
@@ -56,9 +62,10 @@ class AuthenticationContainer extends Component {
                     onChangeHandler={this.onChangeHandler}
                     onAuthWithFacebook={this.onAuthWithFacebook}
                     onAuthWithGoogle={this.onAuthWithGoogle}
+                    onAuthWithLinkedin={this.onAuthWithLinkedin}
                     isLoading={this.props.isLoading}
                 />
-            </div>
+             </div>
         );
     }
 }
@@ -69,4 +76,4 @@ const mapStateToProps = (props) => {
     };
 };
 
-export default connect(mapStateToProps, { signin, signup, authWithGoogle,authWithFacebook })(AuthenticationContainer);
+export default connect(mapStateToProps, { signin, signup, authWithGoogle, authWithFacebook })(AuthenticationContainer);

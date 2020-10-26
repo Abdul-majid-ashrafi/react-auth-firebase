@@ -12,7 +12,8 @@ const AuthenticationComponent = (props) => {
         onChangeHandler,
         isLoading,
         onAuthWithFacebook,
-        onAuthWithGoogle
+        onAuthWithGoogle,
+        onAuthWithLinkedin
     } = props;
     return (
         <div>
@@ -48,6 +49,7 @@ const AuthenticationComponent = (props) => {
                 <p>or</p>
                 <button onClick={() => { onAuthWithGoogle() }}> Auth With Google</button>
                 <button onClick={() => { onAuthWithFacebook() }}> Auth With Faeebook</button>
+                <button onClick={() => { onAuthWithLinkedin() }}> Auth With Linkedin</button>
                 <p>
                     {(isHaveAnAccount) ?
                         <React.Fragment>

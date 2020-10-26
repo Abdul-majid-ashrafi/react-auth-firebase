@@ -13,6 +13,7 @@ import { AuthenticationContainer, DashboardContainer } from "./containers";
 import history from "./history";
 import { auth } from "./config";
 import { resetSigninUserState } from "./store/actions";
+import { LinkedInPopUp } from 'react-linkedin-login-oauth2';
 
 
 class Routing extends React.Component {
@@ -39,6 +40,11 @@ class Routing extends React.Component {
   };
 
   componentDidMount = async () => {
+    const token = window.location.search.substring(7);
+    token && auth.signInWithCustomToken(token).then(() => {
+      window.location = window.location.origin;
+    });
+
     auth.onAuthStateChanged(async userAuth => {
       // const user = await generateUserDocument(userAuth);
       if (userAuth) {
@@ -67,6 +73,10 @@ class Routing extends React.Component {
             <Switch>
               <Route exact path='/'>
                 {this.Dashboard}
+              </Route>
+
+              <Route exact path='/linkedin'>
+                <LinkedInPopUp />
               </Route>
               {/* <Route exact path='/customerdetail'>
                 {(this.props.user.type || type) === "admin" ? (
