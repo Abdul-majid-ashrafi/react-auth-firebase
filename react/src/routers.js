@@ -7,12 +7,13 @@ import {
   screenLockEnableOfflineMood,
   screenLockDisableOfflineMood,
   PageNotFound,
+  toast,
 } from "./shared";
 import { PasswordReset } from "./components";
 import { AuthenticationContainer, DashboardContainer } from "./containers";
 import history from "./history";
 import { auth } from "./config";
-import { resetSigninUserState } from "./store/actions";
+import { resetSigninUserState, signout } from "./store/actions";
 import { LinkedInPopUp } from 'react-linkedin-login-oauth2';
 
 
@@ -47,8 +48,12 @@ class Routing extends React.Component {
 
     auth.onAuthStateChanged(async userAuth => {
       // const user = await generateUserDocument(userAuth);
-      if (userAuth) {
+      console.log(userAuth)
+      if (userAuth && userAuth.emailVerified) {
         this.props.resetSigninUserState(userAuth);
+      } else if (userAuth && !userAuth.emailVerified) {
+        toast("info", "Verification email send, please do verify you account.", 5);
+        this.props.signout();
       }
     });
   };
@@ -106,4 +111,4 @@ const mapStateToProps = (props) => {
     isUserExist: props.auth.isUserExist,
   };
 };
-export default connect(mapStateToProps, { resetSigninUserState })(Routing);
+export default connect(mapStateToProps, { resetSigninUserState, signout })(Routing);

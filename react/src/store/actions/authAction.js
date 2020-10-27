@@ -10,21 +10,30 @@ export const signout = () => async (dispatch) => {
   dispatch({ type: types.SING_OUT });
 };
 
-export const signin = (payload) => (dispatch) => {
+export const signin = (payload) => async (dispatch) => {
   // start type for spining on ui
   dispatch({ type: types.AUTH_START });
   // payload = {
   //   email,
   //   password
   // }
-  auth.signInWithEmailAndPassword(payload.email, payload.password)
-    .then((user) => {
+  try {
+    const { user } = await auth.signInWithEmailAndPassword(payload.email, payload.password);
+    if (!user.emailVerified) {
+      const actionCodeSettings = {
+        url: `${window.location.href}?email=${firebase.auth().currentUser.email}`
+      };
+      await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings);
+      // dispatch({ type: types.AUTH_FAILD });
+    } else {
       dispatch({ type: types.AUTH_SUCCESS, user });
-    }).catch(error => {
-      dispatch({ type: types.AUTH_FAILD });
-      toast("error", error.message);
-      console.error("Error signing in with password and email", error);
-    });
+      toast("success", "Login successfully");
+    }
+  } catch (error) {
+    dispatch({ type: types.AUTH_FAILD });
+    toast("error", error.message);
+    console.error("Error signing in with password and email", error);
+  }
 };
 
 export const signup = (payload) => async (dispatch) => {
@@ -40,9 +49,9 @@ export const signup = (payload) => async (dispatch) => {
       try {
         // https://firebase.google.com/docs/auth/web/email-link-auth
         const actionCodeSettings = {
-          url: 'http://localhost:3000/?email=' + firebase.auth().currentUser.email,
+          url: `${window.location.href}?email=${firebase.auth().currentUser.email}`
         };
-        await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
+        await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings);
       } catch (error) {
         toast("error", "Error durring send verification email" + error.message);
       }

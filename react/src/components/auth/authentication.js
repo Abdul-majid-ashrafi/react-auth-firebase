@@ -25,6 +25,7 @@ const AuthenticationComponent = (props) => {
                 <form>
                     <label htmlFor="userEmail">Email:</label>
                     <input
+                        autoFocus={true}
                         type="email"
                         name="email"
                         value={email}
@@ -41,7 +42,7 @@ const AuthenticationComponent = (props) => {
                         id="userPassword"
                         onChange={(event) => onChangeHandler(event)}
                     />
-                    <button onClick={(event) => { onAuthenticationHandler(event, email, password) }}>
+                    <button onClick={(event) => { onAuthenticationHandler(event, email, password) }} disabled={isLoading}>
                         {(isHaveAnAccount) ? "Sign In" : "Sign Up"}
                     </button>
                 </form>
