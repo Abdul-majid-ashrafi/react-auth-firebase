@@ -49,9 +49,10 @@ class Routing extends React.Component {
     auth.onAuthStateChanged(async userAuth => {
       // const user = await generateUserDocument(userAuth);
       console.log(userAuth)
-      if (userAuth && userAuth.emailVerified) {
+      // use displayName for social auth
+      if (userAuth && (userAuth.emailVerified || userAuth.displayName)) {
         this.props.resetSigninUserState(userAuth);
-      } else if (userAuth && !userAuth.emailVerified) {
+      } else if (userAuth && (!userAuth.emailVerified && !userAuth.displayName)) {
         toast("info", "Verification email send, please do verify you account.", 5);
         this.props.signout();
       }
