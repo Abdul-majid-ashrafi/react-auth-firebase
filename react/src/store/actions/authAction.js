@@ -21,9 +21,11 @@ export const signin = (payload) => async (dispatch) => {
     const { user } = await auth.signInWithEmailAndPassword(payload.email, payload.password);
     if (!user.emailVerified) {
       const actionCodeSettings = {
-        url: `${window.location.href}?email=${firebase.auth().currentUser.email}`
+        url: `${window.location.href}`
+        // url: `${window.location.href}?email=${firebase.auth().currentUser.email}`
       };
-      await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings);
+      // await firebase.auth().currentUser.sendEmailVerification(actionCodeSettings);
+      await user.sendEmailVerification(actionCodeSettings);
       // dispatch({ type: types.AUTH_FAILD });
     } else {
       dispatch({ type: types.AUTH_SUCCESS, user });
